@@ -1,0 +1,5 @@
+{
+    "vetur.validation.template": false,
+    "js/ts.implicitProjectConfig.strictFunctionTypes": false,
+    "js/ts.implicitProjectConfig.strictNullChecks": false
+}

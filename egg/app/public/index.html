@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>增删改查页</title>
+</head>
+
+<body>
+    <div id="app">
+        <form @submit.prevent="insert">
+            <input hidden="true"  type="text" v-model="UserID">
+            UserName:<input type="text" v-model="UserName">
+            PassWord:<input type="text" v-model="PassWord">
+            UserClass:<input type="text" v-model="UserClass">
+            <button>添加</button>
+        </form>
+        <ul>
+            <li v-for="item,index in list">
+                {{item}}
+                <button @click="del(item)">删除</button>
+                <button @click="upd(item)">修改</button>
+            </li>
+        </ul>
+        <button @click="cookie">cookie:{{cookieNumber}}</button>
+        <button @click="session">session:{{sessionNumber}}</button>
+    </div>
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+        Vue.createApp({
+            data() {
+                return {
+                    list: [],
+                    UserID:0,
+                    UserName: "",
+                    PassWord: "",
+                    UserClass: "",
+                    cookieNumber: 0,
+                    sessionNumber: 0,
+                }
+            },
+            mounted() {
+                axios.get(`/fruit?tab=user`)
+                    .then((res) => {
+                        this.list = res.data;
+                    })
+            },
+            methods:{
+                insert(){
+                    axios.post(`/fruit?ww=post`,{
+                        UserName: this.UserName,
+                        PassWord: this.PassWord,
+                        UserClass: this.UserClass
+                    })
+                    .then((res) => {
+                        this.list = res.data;
+                    })
+                },
+                del(i){
+                    axios.delete(`/fruit/${i}?ww=delete`)
+                    .then((res) => {
+                        this.list = res.data;
+                    })
+                },
+                upd(i){
+                    axios.put(`/fruit/${i}?ee=put`,{
+                        UserName: this.UserName,
+                        PassWord: this.PassWord,
+                        UserClass: this.UserClass
+                    })
+                    .then((res) => {
+                        this.list = res.data;
+                    })
+                }, 
+                cookie(){
+                    axios.get(`/cookie`)
+                    .then((res) => {
+                        this.cookieNumber = res.data;
+                    })                    
+                }, 
+                session(){
+                    axios.get(`/session`)
+                    .then((res) => {
+                        this.sessionNumber = res.data;
+                    })                    
+                }              
+            }
+        }).mount("#app")
+    </script>
+</body>
+
+</html>
